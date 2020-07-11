@@ -4,9 +4,9 @@
     
 <b>Typescript helper functions for AWS S3 service</b>
     
-[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.typescript-aws-s3-helper?branchName=master)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=19&branchName=master)
-[![Tests](https://img.shields.io/azure-devops/tests/kbrashears5/github/19)](https://img.shields.io/azure-devops/tests/kbrashears5/github/19)
-[![Code Coverage](https://img.shields.io/azure-devops/coverage/kbrashears5/github/19)](https://img.shields.io/azure-devops/coverage/kbrashears5/github/19)
+[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.typescript-aws-s3-helper?branchName=master)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=10&branchName=master)
+[![Tests](https://img.shields.io/azure-devops/tests/kbrashears5/github/10)](https://img.shields.io/azure-devops/tests/kbrashears5/github/10)
+[![Code Coverage](https://img.shields.io/azure-devops/coverage/kbrashears5/github/10)](https://img.shields.io/azure-devops/coverage/kbrashears5/github/10)
 
 [![NPM Version](https://img.shields.io/npm/v/typescript-aws-s3-helper)](https://img.shields.io/npm/v/typescript-aws-s3-helper)
 [![Downloads](https://img.shields.io/npm/dt/typescript-aws-s3-helper)](https://img.shields.io/npm/dt/typescript-aws-s3-helper)
