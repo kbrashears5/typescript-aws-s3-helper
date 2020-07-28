@@ -2,14 +2,13 @@ import { S3Helper } from './helper';
 import { Logger, LogLevel } from 'typescript-ilogger';
 import { TestingValues } from './test-values';
 import { S3Mock } from './mock';
+import { SignedUrlType } from './signed-url-type';
 
 const logger = new Logger(LogLevel.Off);
 const mockerResolves = new S3Mock(false);
-const s3HelperMockResolves = new S3Helper(logger,
-    mockerResolves.Mock);
+const s3HelperMockResolves = new S3Helper(logger, mockerResolves.Mock);
 const mockerRejects = new S3Mock(true);
-const s3HelperMockRejects = new S3Helper(logger,
-    mockerRejects.Mock);
+const s3HelperMockRejects = new S3Helper(logger, mockerRejects.Mock);
 const TestValues = new TestingValues();
 
 /**
@@ -20,45 +19,27 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.CopyObjectAsync.name}`, () => 
     const action = `${S3Helper.name}.${s3HelperMockResolves.CopyObjectAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} sourceBucket`, () => {
-        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.EmptyString,
-            TestValues.Key,
-            TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.EmptyString, TestValues.Key, TestValues.Name, TestValues.Key);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} sourceBucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} sourceKey`, () => {
-        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name,
-            TestValues.EmptyString,
-            TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name, TestValues.EmptyString, TestValues.Name, TestValues.Key);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} sourceKey`);
     });
     test(`${TestValues.ThrowsOnEmpty} destinationBucket`, () => {
-        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name,
-            TestValues.Key,
-            TestValues.EmptyString,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name, TestValues.Key, TestValues.EmptyString, TestValues.Key);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} destinationBucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} destinationKey`, () => {
-        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name,
-            TestValues.Key,
-            TestValues.Name,
-            TestValues.EmptyString);
+        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.EmptyString);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} destinationKey`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.CopyObjectAsync(TestValues.Name,
-            TestValues.Key,
-            TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockRejects.CopyObjectAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.Key);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name,
-            TestValues.Key,
-            TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.CopyObjectAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.Key);
         return expect(actual).resolves.toEqual(mockerResolves.CopyObjectOutput);
     });
 });
@@ -106,6 +87,31 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.DeleteBucketAsync.name}`, () =
 });
 
 /**
+ * Test the DeleteObjectTagsAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.DeleteObjectTagsAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.DeleteObjectTagsAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.DeleteObjectTagsAsync(TestValues.EmptyString, TestValues.Name);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.DeleteObjectTagsAsync(TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.DeleteObjectTagsAsync(TestValues.Name, TestValues.Name);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.DeleteObjectTagsAsync(TestValues.Name, TestValues.Name);
+        return expect(actual).resolves.toEqual({});
+    });
+});
+
+/**
  * Test the DeleteObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMockResolves.DeleteObjectAsync.name}`, () => {
@@ -113,23 +119,19 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.DeleteObjectAsync.name}`, () =
     const action = `${S3Helper.name}.${s3HelperMockResolves.DeleteObjectAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
-        const actual = s3HelperMockResolves.DeleteObjectAsync(TestValues.EmptyString,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.DeleteObjectAsync(TestValues.EmptyString, TestValues.Key);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} key`, () => {
-        const actual = s3HelperMockResolves.DeleteObjectAsync(TestValues.Name,
-            TestValues.EmptyString);
+        const actual = s3HelperMockResolves.DeleteObjectAsync(TestValues.Name, TestValues.EmptyString);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.DeleteObjectAsync(TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockRejects.DeleteObjectAsync(TestValues.Name, TestValues.Key);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.DeleteObjectAsync(TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.DeleteObjectAsync(TestValues.Name, TestValues.Key);
         return expect(actual).resolves.toEqual(mockerResolves.CreateBucketOutput);
     });
 });
@@ -142,25 +144,49 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.DeleteObjectsAsync.name}`, () 
     const action = `${S3Helper.name}.${s3HelperMockResolves.DeleteObjectsAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
-        const actual = s3HelperMockResolves.DeleteObjectsAsync(TestValues.EmptyString,
-            [TestValues.Key]);
+        const actual = s3HelperMockResolves.DeleteObjectsAsync(TestValues.EmptyString, [TestValues.Key]);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} key array`, () => {
-        const actual = s3HelperMockResolves.DeleteObjectsAsync(TestValues.Name,
-            TestValues.EmptyArray);
+        const actual = s3HelperMockResolves.DeleteObjectsAsync(TestValues.Name, TestValues.EmptyArray);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} at least one key`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.DeleteObjectsAsync(TestValues.Name,
-            [TestValues.Key]);
+        const actual = s3HelperMockRejects.DeleteObjectsAsync(TestValues.Name, [TestValues.Key]);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.DeleteObjectsAsync(TestValues.Name,
-            [TestValues.Key]);
+        const actual = s3HelperMockResolves.DeleteObjectsAsync(TestValues.Name, [TestValues.Key]);
         return expect(actual).resolves.toEqual(mockerResolves.CreateBucketOutput);
     });
+});
+
+/**
+ * Test the GetBucketMetadataAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetBucketMetadataAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.GetBucketMetadataAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.GetBucketMetadataAsync(TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.GetBucketMetadataAsync(TestValues.Name);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.GetBucketMetadataAsync(TestValues.Name);
+        return expect(actual).resolves.toEqual(mockerResolves.CreateBucketOutput);
+    });
+});
+
+/**
+ * Test the GetObjectAsJsonAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetObjectAsJsonAsync.name}`, () => {
+    // TODO
 });
 
 /**
@@ -171,24 +197,131 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.GetObjectAsync.name}`, () => {
     const action = `${S3Helper.name}.${s3HelperMockResolves.GetObjectAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
-        const actual = s3HelperMockResolves.GetObjectAsync(TestValues.EmptyString,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.GetObjectAsync(TestValues.EmptyString, TestValues.Key);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} key`, () => {
-        const actual = s3HelperMockResolves.GetObjectAsync(TestValues.Name,
-            TestValues.EmptyString);
+        const actual = s3HelperMockResolves.GetObjectAsync(TestValues.Name, TestValues.EmptyString);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.GetObjectAsync(TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockRejects.GetObjectAsync(TestValues.Name, TestValues.Key);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.GetObjectAsync(TestValues.Name,
-            TestValues.Key);
+        const actual = s3HelperMockResolves.GetObjectAsync(TestValues.Name, TestValues.Key);
         return expect(actual).resolves.toEqual(mockerResolves.GetObjectOutput);
+    });
+});
+
+/**
+ * Test the GetObjectContentsAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetObjectContentsAsync.name}`, () => {
+    // TODO
+});
+
+/**
+ * Test the GetObjectMetadataAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetObjectMetadataAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.GetObjectMetadataAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.GetObjectMetadataAsync(TestValues.EmptyString, TestValues.Name);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.GetObjectMetadataAsync(TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.GetObjectMetadataAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.GetObjectMetadataAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).resolves.toEqual(TestValues.Metadata);
+    });
+});
+
+/**
+ * Test the GetObjectTagsAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetObjectTagsAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.GetObjectTagsAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.GetObjectTagsAsync(TestValues.EmptyString, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.GetObjectTagsAsync(TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.GetObjectTagsAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.GetObjectTagsAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).resolves.toEqual(TestValues.FileTags);
+    });
+});
+
+/**
+ * Test the GetSignedUrl method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetSignedUrl.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.GetSignedUrl.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.GetSignedUrl(TestValues.EmptyString, TestValues.Key, SignedUrlType.Download);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.GetSignedUrl(TestValues.Name, TestValues.EmptyString, SignedUrlType.Download);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.GetSignedUrl(TestValues.Name, TestValues.Key, SignedUrlType.Download);
+        return expect(actual).resolves.toEqual(TestValues.SignedUrl);
+    });
+});
+
+/**
+ * Test the MoveObjectAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.MoveObjectAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.CopyObjectAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} sourceBucket`, () => {
+        const actual = s3HelperMockResolves.MoveObjectAsync(TestValues.EmptyString, TestValues.Key, TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} sourceBucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} sourceKey`, () => {
+        const actual = s3HelperMockResolves.MoveObjectAsync(TestValues.Name, TestValues.EmptyString, TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} sourceKey`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} destinationBucket`, () => {
+        const actual = s3HelperMockResolves.MoveObjectAsync(TestValues.Name, TestValues.Key, TestValues.EmptyString, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} destinationBucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} destinationKey`, () => {
+        const actual = s3HelperMockResolves.MoveObjectAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} destinationKey`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.MoveObjectAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.MoveObjectAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.Key);
+        return expect(actual).resolves.toEqual(undefined);
     });
 });
 
@@ -200,27 +333,81 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.PutObjectAsync.name}`, () => {
     const action = `${S3Helper.name}.${s3HelperMockResolves.PutObjectAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
-        const actual = s3HelperMockResolves.PutObjectAsync(TestValues.EmptyString,
-            TestValues.Key,
-            TestValues.Body);
+        const actual = s3HelperMockResolves.PutObjectAsync(TestValues.EmptyString, TestValues.Key, TestValues.Body);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} key`, () => {
-        const actual = s3HelperMockResolves.PutObjectAsync(TestValues.Name,
-            TestValues.EmptyString,
-            TestValues.Body);
+        const actual = s3HelperMockResolves.PutObjectAsync(TestValues.Name, TestValues.EmptyString, TestValues.Body);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.PutObjectAsync(TestValues.Name,
-            TestValues.Key,
-            TestValues.Body);
+        const actual = s3HelperMockRejects.PutObjectAsync(TestValues.Name, TestValues.Key, TestValues.Body);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.PutObjectAsync(TestValues.Name,
-            TestValues.Key,
-            TestValues.Body);
+        const actual = s3HelperMockResolves.PutObjectAsync(TestValues.Name, TestValues.Key, TestValues.Body);
+        return expect(actual).resolves.toEqual(mockerResolves.PutObjectOutput);
+    });
+});
+
+/**
+ * Test the SetObjectTagAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.SetObjectTagAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.SetObjectTagAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagAsync(TestValues.EmptyString, TestValues.Key, TestValues.Name, TestValues.Name);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagAsync(TestValues.Name, TestValues.EmptyString, TestValues.Name, TestValues.Name);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} tagName`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagAsync(TestValues.Name, TestValues.Key, TestValues.EmptyString, TestValues.Name);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} tagName`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} tagValue`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} tagValue`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.SetObjectTagAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.Name);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.SetObjectTagAsync(TestValues.Name, TestValues.Key, TestValues.Name, TestValues.Name);
+        return expect(actual).resolves.toEqual(mockerResolves.PutObjectOutput);
+    });
+});
+
+/**
+ * Test the SetObjectTagsAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.SetObjectTagsAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.SetObjectTagsAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.EmptyString, TestValues.Key, TestValues.TagSet);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.EmptyString, TestValues.TagSet);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} tags`, () => {
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.EmptyArray);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} tags`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.TagSet);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.TagSet);
         return expect(actual).resolves.toEqual(mockerResolves.PutObjectOutput);
     });
 });

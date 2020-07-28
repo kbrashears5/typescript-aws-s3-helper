@@ -2,6 +2,7 @@ import * as AWS from 'aws-sdk';
 import { ILogger } from 'typescript-ilogger';
 import { BaseClass } from 'typescript-helper-functions';
 import { IS3Helper } from './interface';
+import { SignedUrlType } from './signed-url-type';
 
 /**
  * S3 Helper
@@ -53,13 +54,11 @@ export class S3Helper extends BaseClass implements IS3Helper {
             CopySource: `${sourceBucket}/${sourceKey}`,
             Key: destinationKey,
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.copyObject(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
 
         return response;
     }
@@ -79,13 +78,11 @@ export class S3Helper extends BaseClass implements IS3Helper {
         const params: AWS.S3.CreateBucketRequest = {
             Bucket: name,
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.createBucket(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
 
         return response;
     }
@@ -105,13 +102,37 @@ export class S3Helper extends BaseClass implements IS3Helper {
         const params: AWS.S3.DeleteBucketRequest = {
             Bucket: name,
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.deleteBucket(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
+    /**
+     * Delete all the object tags off of an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    public async DeleteObjectTagsAsync(bucket: string,
+        key: string): Promise<object> {
+
+        const action = `${S3Helper.name}.${this.DeleteObjectTagsAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key })
+
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+
+        const params: AWS.S3.DeleteObjectTaggingRequest = {
+            Bucket: bucket,
+            Key: key,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.deleteObjectTagging(params).promise();
+        this.LogHelper.LogResponse(action, response);
 
         return response;
     }
@@ -136,13 +157,11 @@ export class S3Helper extends BaseClass implements IS3Helper {
             Bucket: bucket,
             Key: key,
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.deleteObject(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
 
         return response;
     }
@@ -173,16 +192,39 @@ export class S3Helper extends BaseClass implements IS3Helper {
             Bucket: bucket,
             Delete: { Objects: keysArray },
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.deleteObjects(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
 
         return response;
     }
+
+    /**
+     * Get metadata about a bucket
+     * @param bucket {string} Bucket
+     */
+    public async GetBucketMetadataAsync(bucket: string): Promise<object> {
+
+        const action = `${S3Helper.name}.${this.GetBucketMetadataAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+
+        const params: AWS.S3.HeadBucketRequest = {
+            Bucket: bucket,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        // make AWS call
+        const response = await this.Repository.headBucket(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
 
     /**
      * Get a JSON typed object from S3
@@ -191,12 +233,9 @@ export class S3Helper extends BaseClass implements IS3Helper {
      */
     public async GetObjectAsJsonAsync<T>(bucket: string,
         key: string): Promise<T> {
-        const data = (await this.GetObjectAsync(bucket,
-            key)).Body;
+        const data = await this.GetObjectContentsAsync(bucket, key);
 
-        const buffer = data ? data as Buffer : undefined;
-
-        const json = buffer ? buffer.toString() : '';
+        const json = data ? data.toString() : '';
 
         return JSON.parse(json) as T;
     }
@@ -221,15 +260,147 @@ export class S3Helper extends BaseClass implements IS3Helper {
             Bucket: bucket,
             Key: key,
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.getObject(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
 
         return response;
+    }
+
+    /**
+     * Get the contents of an S3 object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    public async GetObjectContentsAsync(bucket: string,
+        key: string): Promise<Buffer | undefined> {
+
+        const data = (await this.GetObjectAsync(bucket, key)).Body;
+
+        return data ? data as Buffer : undefined;
+    }
+
+    /**
+     * Get metadata about an object
+     * @param bucket {string} Bucket
+     * @param key  {string} Object key
+     */
+    public async GetObjectMetadataAsync(bucket: string,
+        key: string): Promise<AWS.S3.Metadata | undefined> {
+
+        const action = `${S3Helper.name}.${this.GetObjectMetadataAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+
+        const params: AWS.S3.HeadObjectRequest = {
+            Bucket: bucket,
+            Key: key,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        // make AWS call
+        const response = await this.Repository.headObject(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response.Metadata;
+    }
+
+    /**
+     * Gets the tags for an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    public async GetObjectTagsAsync(bucket: string,
+        key: string): Promise<AWS.S3.TagSet> {
+
+        const action = `${S3Helper.name}.${this.GetObjectTagsAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+
+        const params: AWS.S3.GetObjectTaggingRequest = {
+            Bucket: bucket,
+            Key: key,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.getObjectTagging(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response.TagSet;
+    }
+
+    /**
+     * Get a signed url to upload to or download from
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param type {SignedUrlType} Type of signed url to get
+     * @param acl {AWS.S3.ObjectCannedACL} ACL of file if uploading
+     * @param timeoutInMinutes {number} Timeout for the signed url
+     */
+    public async GetSignedUrl(bucket: string,
+        key: string,
+        type: SignedUrlType,
+        acl?: AWS.S3.ObjectCannedACL,
+        timeoutInMinutes: number = 5): Promise<string> {
+
+        const action = `${S3Helper.name}.${this.GetSignedUrl.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, type, acl, timeoutMinutes: timeoutInMinutes });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+
+        // determine upload or download url
+        let operation = '';
+        switch (type) {
+            case SignedUrlType.Download:
+                operation = 'getObject'
+                break;
+            case SignedUrlType.Upload:
+                operation = 'putObject'
+            default:
+                break;
+        }
+
+        const params = {
+            Bucket: bucket,
+            Key: key,
+            Expires: timeoutInMinutes * 60,
+            ACL: acl,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.getSignedUrl(operation, params);
+        this.LogHelper.LogResponse(action, { response });
+
+        return response;
+    }
+
+    /**
+     * Move a file within a bucket or to a different bucket
+     * @param sourceBucket {string} Source bucket name
+     * @param sourceKey {string} Source object key
+     * @param destinationBucket {string} Destination bucket name
+     * @param destinationKey {string} Destination object key
+     */
+    public async MoveObjectAsync(sourceBucket: string,
+        sourceKey: string,
+        destinationBucket: string,
+        destinationKey: string): Promise<void> {
+
+        const copyResult = await this.CopyObjectAsync(sourceBucket, sourceKey, destinationBucket, destinationKey);
+
+        if (!this.ObjectOperations.IsNullOrEmpty(copyResult)) {
+            await this.DeleteObjectAsync(sourceBucket, sourceKey);
+        }
     }
 
     /**
@@ -266,13 +437,78 @@ export class S3Helper extends BaseClass implements IS3Helper {
             ContentEncoding: encoding,
             Key: key,
         };
-        this.LogHelper.LogRequest(action,
-            params);
+        this.LogHelper.LogRequest(action, params);
 
         // make AWS call
         const response = await this.Repository.putObject(params).promise();
-        this.LogHelper.LogResponse(action,
-            response);
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
+    /**
+     * Inserts or updates a tag on an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param tagName {string} Tag name
+     * @param tagValue {string} Tag value
+     */
+    public async SetObjectTagAsync(bucket: string,
+        key: string,
+        tagName: string,
+        tagValue: string): Promise<AWS.S3.PutObjectTaggingOutput> {
+
+        const action = `${S3Helper.name}.${this.SetObjectTagAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, tagName, tagValue });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(tagName)) { throw new Error(`[${action}]-Must supply tagName`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(tagValue)) { throw new Error(`[${action}]-Must supply tagValue`); }
+
+        // get the original
+        const tags = await this.GetObjectTagsAsync(bucket, key);
+
+        // find if it exists
+        const tag = tags.find((t) => t.Key === tagName);
+        if (tag) {
+            tag.Value = tagValue;
+        } else {
+            tags.push({ Key: tagName, Value: tagValue });
+        }
+
+        return this.SetObjectTagsAsync(bucket, key, tags);
+    }
+
+    /**
+     * Sets the tags on an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param tags {AWS.S3.TagSet} Tags
+     */
+    public async SetObjectTagsAsync(bucket: string,
+        key: string,
+        tags: AWS.S3.TagSet): Promise<AWS.S3.PutObjectTaggingOutput> {
+
+        const action = `${S3Helper.name}.${this.SetObjectTagsAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, tags });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+        if (this.ObjectOperations.IsNullOrEmpty(tags)) { throw new Error(`[${action}]-Must supply tags`); }
+
+        const params: AWS.S3.PutObjectTaggingRequest = {
+            Bucket: bucket,
+            Key: key,
+            Tagging: { TagSet: tags },
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        // make AWS call
+        const response = await this.Repository.putObjectTagging(params).promise();
+        this.LogHelper.LogResponse(action, response);
 
         return response;
     }

@@ -35,14 +35,51 @@ export class S3Mock extends BaseMock {
     public DeleteObjectsOutput: AWS.S3.DeleteObjectsOutput = {};
 
     /**
+     * Mock an AWS.S3.DeleteObjectTaggingOutput response
+     */
+    public DeleteObjectTaggingOutput: AWS.S3.DeleteObjectTaggingOutput = {};
+
+    /**
+     * Mock an AWS.S3.GetObjectOutput response
+     * Technically does not exist
+     */
+    public GetBucketOutput: object = {};
+
+    /**
      * Mock an AWS.S3.GetObjectOutput response
      */
     public GetObjectOutput: AWS.S3.GetObjectOutput = { Body: 'mock-body' };
 
     /**
-     * Mocks an AWS.S3.PutOjbectOutput response
+     * Mock an AWS.S3.GetObjectTaggingOutput response
+     */
+    public GetObjectTaggingOutput: AWS.S3.GetObjectTaggingOutput = {
+        TagSet: [{
+            Key: 'Tag1',
+            Value: 'Tag1Value',
+        } as AWS.S3.Tag]
+    };
+
+    /**
+     * Mock an AWS.S3.HeadBucketOutput response
+     * Technically does not exist
+     */
+    public HeadBucketOutput: object = {};
+
+    /**
+     * Mock an AWS.S3.Metadata response
+     */
+    public HeadObjectOutput: AWS.S3.HeadObjectOutput = { Metadata: { key1: 'value1' } };
+
+    /**
+     * Mocks an AWS.S3.PutObjectOutput response
      */
     public PutObjectOutput: AWS.S3.PutObjectOutput = {};
+
+    /**
+     * Mocks an AWS.S3.PutObjectTaggingOutput response
+     */
+    public PutObjectTaggingOutput: AWS.S3.PutObjectTaggingOutput = {};
 
     /**
      * Create the S3 mock
@@ -92,6 +129,14 @@ export class S3Mock extends BaseMock {
                         Promise.resolve<AWS.S3.DeleteObjectsOutput>(this.DeleteObjectsOutput);
                 }),
             },
+            // delete object tagging response
+            deleteObjectTagging: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.DeleteObjectTaggingOutput>(this.DeleteObjectTaggingOutput);
+                }),
+            },
             // get object response
             getObject: {
                 promise: jest.fn().mockImplementation(() => {
@@ -100,12 +145,44 @@ export class S3Mock extends BaseMock {
                         Promise.resolve<AWS.S3.GetObjectOutput>(this.GetObjectOutput);
                 }),
             },
+            // get object tagging response
+            getObjectTagging: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.GetObjectTaggingOutput>(this.GetObjectTaggingOutput);
+                }),
+            },
+            // head bucket response
+            headBucket: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<{}>(this.HeadBucketOutput);
+                }),
+            },
+            // head object response
+            headObject: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.HeadObjectOutput>(this.HeadObjectOutput);
+                }),
+            },
             // put object response
             putObject: {
                 promise: jest.fn().mockImplementation(() => {
                     return returnError ?
                         Promise.reject(rejectResponse) :
                         Promise.resolve<AWS.S3.PutObjectOutput>(this.PutObjectOutput);
+                }),
+            },
+            // put object tagging response
+            putObjectTagging: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.PutObjectTaggingOutput>(this.PutObjectTaggingOutput);
                 }),
             },
         };
@@ -118,10 +195,18 @@ export class S3Mock extends BaseMock {
             deleteBucket: () => awsResponses.deleteBucket,
             deleteObject: () => awsResponses.deleteObject,
             deleteObjects: () => awsResponses.deleteObjects,
+            deleteObjectTagging: () => awsResponses.deleteObjectTagging,
             getObject: () => awsResponses.getObject,
+            getObjectTagging: () => awsResponses.getObjectTagging,
+            getSignedUrl: () => (SignedUrl),
+            headBucket: () => awsResponses.headBucket,
+            headObject: () => awsResponses.headObject,
             putObject: () => awsResponses.putObject,
+            putObjectTagging: () => awsResponses.putObjectTagging,
         };
 
         return functions;
     }
 }
+
+const SignedUrl = 'https://bucket.s3.amazonaws.com/file.ext?AWSAccessKeyId=AccessKeyId&Content-Type=ContentType&Expires=123456789&Signature=Signature';
