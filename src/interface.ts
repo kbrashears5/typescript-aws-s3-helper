@@ -1,3 +1,5 @@
+import { SignedUrlType } from './signed-url-type';
+
 /**
  * S3 Helper interface
  */
@@ -48,6 +50,20 @@ export interface IS3Helper {
         keys: string[]): Promise<AWS.S3.DeleteObjectsOutput>;
 
     /**
+     * Delete all the object tags off of an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    DeleteObjectTagsAsync(bucket: string,
+        key: string): Promise<object>;
+
+    /**
+     * Get metadata about a bucket
+     * @param bucket {string} Bucket
+     */
+    GetBucketMetadataAsync(bucket: string): Promise<object>;
+
+    /**
      * Get a JSON typed object from S3
      * @param bucket {string} Bucket to retrieve from
      * @param key {string} File prefix and name
@@ -64,6 +80,56 @@ export interface IS3Helper {
         key: string): Promise<AWS.S3.GetObjectOutput>;
 
     /**
+     * Get the contents of an S3 object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    GetObjectContentsAsync(bucket: string,
+        key: string): Promise<Buffer | undefined>;
+
+    /**
+     * Get metadata about an object
+     * @param bucket {string} Bucket
+     * @param key  {string} Object key
+     */
+    GetObjectMetadataAsync(bucket: string,
+        key: string): Promise<AWS.S3.Metadata | undefined>;
+
+    /**
+     * Gets the tags for an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    GetObjectTagsAsync(bucket: string,
+        key: string): Promise<AWS.S3.TagSet>;
+
+    /**
+     * Get a signed url to upload to or download from
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param type {SignedUrlType} Type of signed url to get
+     * @param acl {AWS.S3.ObjectCannedACL} ACL of file if uploading
+     * @param timeoutInMinutes {number} Timeout for the signed url
+     */
+    GetSignedUrl(bucket: string,
+        key: string,
+        type: SignedUrlType,
+        timeoutInMinutes: number,
+        acl?: AWS.S3.ObjectCannedACL): Promise<string>;
+
+    /**
+     * Move a file within a bucket or to a different bucket
+     * @param sourceBucket {string} Source bucket name
+     * @param sourceKey {string} Source object key
+     * @param destinationBucket {string} Destination bucket name
+     * @param destinationKey {string} Destination object key
+     */
+    MoveObjectAsync(sourceBucket: string,
+        sourceKey: string,
+        destinationBucket: string,
+        destinationKey: string): Promise<void>;
+
+    /**
      * Upload a file to S3 Bucket
      * @param bucket {string} Bucket to upload to
      * @param key {string} File prefix and name
@@ -77,4 +143,26 @@ export interface IS3Helper {
         body: string | Buffer,
         acl?: AWS.S3.ObjectCannedACL,
         encoding?: string): Promise<AWS.S3.PutObjectOutput>;
+
+    /**
+     * Inserts or updates a tag on an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param tagName {string} Tag name
+     * @param tagValue {string} Tag value
+     */
+    SetObjectTagAsync(bucket: string,
+        key: string,
+        tagName: string,
+        tagValue: string): Promise<AWS.S3.PutObjectTaggingOutput>;
+
+    /**
+     * Sets the tags on an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param tags {AWS.S3.TagSet} Tags
+     */
+    SetObjectTagsAsync(bucket: string,
+        key: string,
+        tags: AWS.S3.TagSet): Promise<AWS.S3.PutObjectTaggingOutput>;
 }

@@ -112,32 +112,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
     }
 
     /**
-     * Delete all the object tags off of an object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     */
-    public async DeleteObjectTagsAsync(bucket: string,
-        key: string): Promise<object> {
-
-        const action = `${S3Helper.name}.${this.DeleteObjectTagsAsync.name}`;
-        this.LogHelper.LogInputs(action, { bucket, key })
-
-        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
-        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
-
-        const params: AWS.S3.DeleteObjectTaggingRequest = {
-            Bucket: bucket,
-            Key: key,
-        };
-        this.LogHelper.LogRequest(action, params);
-
-        const response = await this.Repository.deleteObjectTagging(params).promise();
-        this.LogHelper.LogResponse(action, response);
-
-        return response;
-    }
-
-    /**
      * Delete an object
      * @param bucket {string} Bucket name
      * @param key {string} Object key to delete
@@ -196,6 +170,32 @@ export class S3Helper extends BaseClass implements IS3Helper {
 
         // make AWS call
         const response = await this.Repository.deleteObjects(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
+    /**
+     * Delete all the object tags off of an object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     */
+    public async DeleteObjectTagsAsync(bucket: string,
+        key: string): Promise<object> {
+
+        const action = `${S3Helper.name}.${this.DeleteObjectTagsAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key })
+
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+
+        const params: AWS.S3.DeleteObjectTaggingRequest = {
+            Bucket: bucket,
+            Key: key,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.deleteObjectTagging(params).promise();
         this.LogHelper.LogResponse(action, response);
 
         return response;
@@ -348,8 +348,8 @@ export class S3Helper extends BaseClass implements IS3Helper {
     public async GetSignedUrl(bucket: string,
         key: string,
         type: SignedUrlType,
-        acl?: AWS.S3.ObjectCannedACL,
-        timeoutInMinutes: number = 5): Promise<string> {
+        timeoutInMinutes: number = 5,
+        acl?: AWS.S3.ObjectCannedACL): Promise<string> {
 
         const action = `${S3Helper.name}.${this.GetSignedUrl.name}`;
         this.LogHelper.LogInputs(action, { bucket, key, type, acl, timeoutMinutes: timeoutInMinutes });
