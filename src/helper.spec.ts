@@ -326,6 +326,89 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.MoveObjectAsync.name}`, () => 
 });
 
 /**
+ * Test the MultipartUploadCompleteAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.MultipartUploadCompleteAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.MultipartUploadCompleteAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadCompleteAsync(TestValues.EmptyString, TestValues.Key, TestValues.UploadId);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadCompleteAsync(TestValues.Name, TestValues.EmptyString, TestValues.UploadId);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} uploadId`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadCompleteAsync(TestValues.Name, TestValues.Key, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} uploadId`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.MultipartUploadCompleteAsync(TestValues.Name, TestValues.Key, TestValues.UploadId);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.MultipartUploadCompleteAsync(TestValues.Name, TestValues.Key, TestValues.UploadId);
+        return expect(actual).resolves.toEqual(mockerResolves.CompleteMultipartUploadOutput);
+    });
+});
+
+/**
+ * Test the MultipartUploadStartAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.MultipartUploadStartAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.MultipartUploadStartAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadStartAsync(TestValues.EmptyString, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadStartAsync(TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.MultipartUploadStartAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.MultipartUploadStartAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).resolves.toEqual(mockerResolves.CreateMultipartUploadOutput);
+    });
+});
+
+/**
+ * Test the MultipartUploadUploadPartAsync method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.MultipartUploadUploadPartAsync.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.MultipartUploadUploadPartAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.EmptyString, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.EmptyString, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} uploadId`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.EmptyString, TestValues.UploadPart, TestValues.Body);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} uploadId`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMockRejects.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        return expect(actual).resolves.toEqual(mockerResolves.UploadPartOutput);
+    });
+});
+
+/**
  * Test the PutObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMockResolves.PutObjectAsync.name}`, () => {

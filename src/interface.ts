@@ -10,7 +10,7 @@ export interface IS3Helper {
     Repository: AWS.S3;
 
     /**
-     * Copy an object from a source to a target
+     * Copy an object from source to target
      * @param sourceBucket {string} Source bucket name
      * @param sourceKey {string} Source key
      * @param destinationBucket {string} Destination bucket name
@@ -118,7 +118,7 @@ export interface IS3Helper {
         acl?: AWS.S3.ObjectCannedACL): Promise<string>;
 
     /**
-     * Move a file within a bucket or to a different bucket
+     * Move an object within a bucket or to a different bucket
      * @param sourceBucket {string} Source bucket name
      * @param sourceKey {string} Source object key
      * @param destinationBucket {string} Destination bucket name
@@ -130,17 +130,50 @@ export interface IS3Helper {
         destinationKey: string): Promise<void>;
 
     /**
-     * Upload a file to S3 Bucket
-     * @param bucket {string} Bucket to upload to
-     * @param key {string} File prefix and name
-     * @param body {string} File contents
-     * @param acl {S3CannedACL} S3Canned ACL. Default is 'bucket-owner-full-control'
-     * @param encoding {string} File encoding. Default is 'utf-8'
-     * @returns Promise<string> - URL of uploaded file
+     * Mark the multipart upload as complete
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param uploadId {string} The UploadId of the multipart object
+     */
+    MultipartUploadCompleteAsync(bucket: string,
+        key: string,
+        uploadId: string): Promise<AWS.S3.CompleteMultipartUploadOutput>;
+
+    /**
+     * Start the multipart upload
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param acl {AWS.S3.ObjectCannedACL} ACL Permissions
+     */
+    MultipartUploadStartAsync(bucket: string,
+        key: string,
+        acl?: AWS.S3.ObjectCannedACL): Promise<AWS.S3.CreateMultipartUploadOutput>;
+
+    /**
+     * Upload a part to a S3 multipart object
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param uploadId {string} The UploadId for the multipart object to add to
+     * @param uploadPart {number} Part number of the part being uploaded
+     * @param contents {string} Contents to upload
+     */
+    MultipartUploadUploadPartAsync(bucket: string,
+        key: string,
+        uploadId: string,
+        uploadPart: number,
+        contents: string): Promise<AWS.S3.UploadPartOutput>;
+
+    /**
+     * Upload an object to S3
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param contents {string} Object contents
+     * @param acl {S3CannedACL} ACL permissions. Default is 'bucket-owner-full-control'
+     * @param encoding {string} Text encoding. Default is 'utf-8'
      */
     PutObjectAsync(bucket: string,
         key: string,
-        body: string | Buffer,
+        contents: string | Buffer,
         acl?: AWS.S3.ObjectCannedACL,
         encoding?: string): Promise<AWS.S3.PutObjectOutput>;
 

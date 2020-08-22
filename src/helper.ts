@@ -27,13 +27,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         this.Repository = repository || new AWS.S3(options);
     }
 
-    /**
-     * Copy an object from a source to a target
-     * @param sourceBucket {string} Source bucket name
-     * @param sourceKey {string} Source key
-     * @param destinationBucket {string} Destination bucket name
-     * @param destinationKey {string} Destination key
-     */
     public async CopyObjectAsync(sourceBucket: string,
         sourceKey: string,
         destinationBucket: string,
@@ -63,10 +56,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Create a S3 bucket
-     * @param name {string} Bucket name
-     */
     public async CreateBucketAsync(name: string): Promise<AWS.S3.CreateBucketOutput> {
         const action = `${S3Helper.name}.${this.CreateBucketAsync.name}`;
         this.LogHelper.LogInputs(action, { name });
@@ -87,10 +76,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Delete a S3 bucket
-     * @param name {string} Bucket name
-     */
     public async DeleteBucketAsync(name: string): Promise<object> {
         const action = `${S3Helper.name}.${this.DeleteBucketAsync.name}`;
         this.LogHelper.LogInputs(action, { name });
@@ -111,11 +96,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Delete an object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key to delete
-     */
     public async DeleteObjectAsync(bucket: string,
         key: string): Promise<AWS.S3.DeleteObjectOutput> {
 
@@ -140,11 +120,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Delete multiple objects
-     * @param bucket {string} Bucket name
-     * @param keys {string[]} Array of object keys to delete
-     */
     public async DeleteObjectsAsync(bucket: string,
         keys: string[]): Promise<AWS.S3.DeleteObjectsOutput> {
 
@@ -175,11 +150,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Delete all the object tags off of an object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     */
     public async DeleteObjectTagsAsync(bucket: string,
         key: string): Promise<object> {
 
@@ -201,10 +171,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Get metadata about a bucket
-     * @param bucket {string} Bucket
-     */
     public async GetBucketMetadataAsync(bucket: string): Promise<object> {
 
         const action = `${S3Helper.name}.${this.GetBucketMetadataAsync.name}`;
@@ -225,12 +191,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-
-    /**
-     * Get a JSON typed object from S3
-     * @param bucket {string} Bucket to retrieve from
-     * @param key {string} File prefix and name
-     */
     public async GetObjectAsJsonAsync<T>(bucket: string,
         key: string): Promise<T> {
         const data = await this.GetObjectContentsAsync(bucket, key);
@@ -240,11 +200,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return JSON.parse(json) as T;
     }
 
-    /**
-     * Get an object from S3
-     * @param bucket {string} Bucket to retrieve from
-     * @param key {string} File prefix and name
-     */
     public async GetObjectAsync(bucket: string,
         key: string): Promise<AWS.S3.GetObjectOutput> {
 
@@ -269,11 +224,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Get the contents of an S3 object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     */
     public async GetObjectContentsAsync(bucket: string,
         key: string): Promise<Buffer | undefined> {
 
@@ -282,11 +232,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return data ? data as Buffer : undefined;
     }
 
-    /**
-     * Get metadata about an object
-     * @param bucket {string} Bucket
-     * @param key  {string} Object key
-     */
     public async GetObjectMetadataAsync(bucket: string,
         key: string): Promise<AWS.S3.Metadata | undefined> {
 
@@ -310,11 +255,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response.Metadata;
     }
 
-    /**
-     * Gets the tags for an object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     */
     public async GetObjectTagsAsync(bucket: string,
         key: string): Promise<AWS.S3.TagSet> {
 
@@ -337,14 +277,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response.TagSet;
     }
 
-    /**
-     * Get a signed url to upload to or download from
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     * @param type {SignedUrlType} Type of signed url to get
-     * @param acl {AWS.S3.ObjectCannedACL} ACL of file if uploading
-     * @param timeoutInMinutes {number} Timeout for the signed url
-     */
     public async GetSignedUrl(bucket: string,
         key: string,
         type: SignedUrlType,
@@ -352,7 +284,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
         acl?: AWS.S3.ObjectCannedACL): Promise<string> {
 
         const action = `${S3Helper.name}.${this.GetSignedUrl.name}`;
-        this.LogHelper.LogInputs(action, { bucket, key, type, acl, timeoutMinutes: timeoutInMinutes });
+        this.LogHelper.LogInputs(action, { bucket, key, type, acl, timeoutInMinutes });
 
         // guard clauses
         if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
@@ -384,13 +316,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Move a file within a bucket or to a different bucket
-     * @param sourceBucket {string} Source bucket name
-     * @param sourceKey {string} Source object key
-     * @param destinationBucket {string} Destination bucket name
-     * @param destinationKey {string} Destination object key
-     */
     public async MoveObjectAsync(sourceBucket: string,
         sourceKey: string,
         destinationBucket: string,
@@ -403,23 +328,92 @@ export class S3Helper extends BaseClass implements IS3Helper {
         }
     }
 
-    /**
-     * Upload a file to S3 Bucket
-     * @param bucket {string} Bucket to upload to
-     * @param key {string} File prefix and name
-     * @param body {string} File contents
-     * @param acl {S3CannedACL} S3Canned ACL. Default is 'bucket-owner-full-control'
-     * @param encoding {string} File encoding. Default is 'utf-8'
-     * @returns Promise<string> - URL of uploaded file
-     */
+    public async MultipartUploadCompleteAsync(bucket: string,
+        key: string,
+        uploadId: string): Promise<AWS.S3.CompleteMultipartUploadOutput> {
+
+        const action = `${S3Helper.name}.${this.MultipartUploadCompleteAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, uploadId });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(uploadId)) { throw new Error(`[${action}]-Must supply uploadId`); }
+
+        const params: AWS.S3.CompleteMultipartUploadRequest = {
+            Bucket: bucket,
+            Key: key,
+            UploadId: uploadId,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.completeMultipartUpload(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
+    public async MultipartUploadStartAsync(bucket: string,
+        key: string,
+        acl?: AWS.S3.ObjectCannedACL): Promise<AWS.S3.CreateMultipartUploadOutput> {
+
+        const action = `${S3Helper.name}.${this.MultipartUploadStartAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, acl });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+
+        const params: AWS.S3.CreateMultipartUploadRequest = {
+            Bucket: bucket,
+            Key: key,
+            ACL: acl,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.createMultipartUpload(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
+    public async MultipartUploadUploadPartAsync(bucket: string,
+        key: string,
+        uploadId: string,
+        uploadPart: number,
+        contents: string): Promise<AWS.S3.UploadPartOutput> {
+
+        const action = `${S3Helper.name}.${this.MultipartUploadUploadPartAsync.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, uploadId, uploadPart });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(uploadId)) { throw new Error(`[${action}]-Must supply uploadId`); }
+
+        const params: AWS.S3.UploadPartRequest = {
+            Body: contents,
+            Bucket: bucket,
+            Key: key,
+            PartNumber: uploadPart,
+            UploadId: uploadId,
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.uploadPart(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        return response;
+    }
+
     public async PutObjectAsync(bucket: string,
         key: string,
-        body: string | Buffer,
+        contents: string | Buffer,
         acl?: AWS.S3.ObjectCannedACL,
         encoding?: string): Promise<AWS.S3.PutObjectOutput> {
 
         const action = `${S3Helper.name}.${this.PutObjectAsync.name}`;
-        this.LogHelper.LogInputs(action, { bucket, key, body, acl });
+        this.LogHelper.LogInputs(action, { bucket, key, acl });
 
         // guard clauses
         if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
@@ -432,7 +426,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
         // create params object
         const params: AWS.S3.PutObjectRequest = {
             ACL: acl,
-            Body: body,
+            Body: contents,
             Bucket: bucket,
             ContentEncoding: encoding,
             Key: key,
@@ -446,13 +440,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response;
     }
 
-    /**
-     * Inserts or updates a tag on an object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     * @param tagName {string} Tag name
-     * @param tagValue {string} Tag value
-     */
     public async SetObjectTagAsync(bucket: string,
         key: string,
         tagName: string,
@@ -481,12 +468,6 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return this.SetObjectTagsAsync(bucket, key, tags);
     }
 
-    /**
-     * Sets the tags on an object
-     * @param bucket {string} Bucket name
-     * @param key {string} Object key
-     * @param tags {AWS.S3.TagSet} Tags
-     */
     public async SetObjectTagsAsync(bucket: string,
         key: string,
         tags: AWS.S3.TagSet): Promise<AWS.S3.PutObjectTaggingOutput> {

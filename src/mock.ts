@@ -9,6 +9,11 @@ const AWS = require('aws-sdk');
 export class S3Mock extends BaseMock {
 
     /**
+     * Mock an AWS.S3.CompleteMultipartUploadOutput response
+     */
+    public CompleteMultipartUploadOutput: AWS.S3.CompleteMultipartUploadOutput = {};
+
+    /**
      * Mock an AWS.S3.CopyObjectOutput response
      */
     public CopyObjectOutput: AWS.S3.CopyObjectOutput = {};
@@ -17,6 +22,11 @@ export class S3Mock extends BaseMock {
      * Mock an AWS.S3.CreateBucketOutput response
      */
     public CreateBucketOutput: AWS.S3.CreateBucketOutput = {};
+
+    /**
+     * Mock an AWS.S3.CreateMultipartUploadOutput response
+     */
+    public CreateMultipartUploadOutput: AWS.S3.CreateMultipartUploadOutput = {};
 
     /**
      * Mock an AWS.S3.DeleteBucketOutput response
@@ -82,6 +92,11 @@ export class S3Mock extends BaseMock {
     public PutObjectTaggingOutput: AWS.S3.PutObjectTaggingOutput = {};
 
     /**
+     * Mocks an AWS.S3.UploadPartOutput response
+     */
+    public UploadPartOutput: AWS.S3.UploadPartOutput = {};
+
+    /**
      * Create the S3 mock
      */
     protected CreateMock(returnError: boolean) {
@@ -89,6 +104,14 @@ export class S3Mock extends BaseMock {
 
         // implement the AWS responses
         const awsResponses = {
+            // complete multipart upload response
+            completeMultipartUpload: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.CompleteMultipartUploadOutput>(this.CompleteMultipartUploadOutput);
+                }),
+            },
             // copy object response
             copyObject: {
                 promise: jest.fn().mockImplementation(() => {
@@ -103,6 +126,14 @@ export class S3Mock extends BaseMock {
                     return returnError ?
                         Promise.reject(rejectResponse) :
                         Promise.resolve<AWS.S3.CreateBucketOutput>(this.CreateBucketOutput);
+                }),
+            },
+            // create multipart upload response
+            createMultipartUpload: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.CreateMultipartUploadOutput>(this.CreateMultipartUploadOutput);
                 }),
             },
             // delete bucket response
@@ -185,13 +216,23 @@ export class S3Mock extends BaseMock {
                         Promise.resolve<AWS.S3.PutObjectTaggingOutput>(this.PutObjectTaggingOutput);
                 }),
             },
+            // upload part response
+            uploadPart: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.S3.UploadPartOutput>(this.UploadPartOutput);
+                }),
+            },
         };
 
         // create the functions
         let functions = new AWS.S3();
         functions = {
+            completeMultipartUpload: () => awsResponses.completeMultipartUpload,
             copyObject: () => awsResponses.copyObject,
             createBucket: () => awsResponses.createBucket,
+            createMultipartUpload: () => awsResponses.createMultipartUpload,
             deleteBucket: () => awsResponses.deleteBucket,
             deleteObject: () => awsResponses.deleteObject,
             deleteObjects: () => awsResponses.deleteObjects,
@@ -203,6 +244,7 @@ export class S3Mock extends BaseMock {
             headObject: () => awsResponses.headObject,
             putObject: () => awsResponses.putObject,
             putObjectTagging: () => awsResponses.putObjectTagging,
+            uploadPart: () => awsResponses.uploadPart,
         };
 
         return functions;

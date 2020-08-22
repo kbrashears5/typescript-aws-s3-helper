@@ -18,6 +18,10 @@ export class TestingValues {
     public Key: string = 'key';
     public Name: string = 'name';
     public SignedUrl = 'https://bucket.s3.amazonaws.com/file.ext?AWSAccessKeyId=AccessKeyId&Content-Type=ContentType&Expires=123456789&Signature=Signature';
+    public UploadId: string = 'upload-id';
+
+    // numbers
+    public UploadPart: number = 7;
 
     // objects
     public Metadata: AWS.S3.Metadata = {
