@@ -390,6 +390,15 @@ export class S3Helper extends BaseClass implements IS3Helper {
         if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
         if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
         if (this.ObjectOperations.IsNullOrWhitespace(uploadId)) { throw new Error(`[${action}]-Must supply uploadId`); }
+        if (uploadPart === 0) { throw new Error(`[${action}]-Cannot be zero - uploadId`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(contents)) { throw new Error(`[${action}]-Must supply contents`); }
+
+        const bytes = (new TextEncoder()).encode(contents);
+
+        const tooSmall = bytes.length < 5000000;
+        const tooLarge = bytes.length > 10000000000;
+
+        if (tooSmall || tooLarge) { throw new Error(`[${action}]-Part size must be between 5 MB and 10 GB`); }
 
         const params: AWS.S3.UploadPartRequest = {
             Body: contents,

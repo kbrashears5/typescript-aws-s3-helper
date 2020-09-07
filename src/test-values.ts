@@ -1,9 +1,13 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 /**
  * Test values
  */
 export class TestingValues {
     // descriptions
     public AWSError: string = 'AWS Error';
+    public CannotBeZero: string = 'Cannot be zero';
     public InvalidTest: string = 'returns error from AWS';
     public MustSupply: string = 'Must supply';
     public ThrowsOnEmpty: string = 'throws on empty';
@@ -19,6 +23,7 @@ export class TestingValues {
     public Name: string = 'name';
     public SignedUrl = 'https://bucket.s3.amazonaws.com/file.ext?AWSAccessKeyId=AccessKeyId&Content-Type=ContentType&Expires=123456789&Signature=Signature';
     public UploadId: string = 'upload-id';
+    public UploadPart5Mb: string = fs.readFileSync(path.resolve(__dirname, 'multipart-upload-file.txt'), 'utf8');
 
     // numbers
     public UploadPart: number = 7;

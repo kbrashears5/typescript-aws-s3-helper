@@ -398,12 +398,24 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.MultipartUploadUploadPartAsync
         const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.EmptyString, TestValues.UploadPart, TestValues.Body);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} uploadId`);
     });
+    test(`${TestValues.CannotBeZero} uploadId`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, 0, TestValues.Body);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.CannotBeZero} - uploadId`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} contents`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} contents`);
+    });
+    test(`contents too small`, () => {
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        return expect(actual).rejects.toThrow(`[${action}]-Part size must be between 5 MB and 10 GB`);
+    });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        const actual = s3HelperMockRejects.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.UploadPart5Mb);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.Body);
+        const actual = s3HelperMockResolves.MultipartUploadUploadPartAsync(TestValues.Name, TestValues.Key, TestValues.UploadId, TestValues.UploadPart, TestValues.UploadPart5Mb);
         return expect(actual).resolves.toEqual(mockerResolves.UploadPartOutput);
     });
 });
