@@ -486,11 +486,11 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.SetObjectTagsAsync.name}`, () 
     const action = `${S3Helper.name}.${s3HelperMockResolves.SetObjectTagsAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
-        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.EmptyString, TestValues.Key, TestValues.TagSet);
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.EmptyString, TestValues.Key, TestValues.FileTags);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} key`, () => {
-        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.EmptyString, TestValues.TagSet);
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.EmptyString, TestValues.FileTags);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
     });
     test(`${TestValues.ThrowsOnEmpty} tags`, () => {
@@ -498,11 +498,11 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.SetObjectTagsAsync.name}`, () 
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} tags`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = s3HelperMockRejects.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.TagSet);
+        const actual = s3HelperMockRejects.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.FileTags);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.TagSet);
+        const actual = s3HelperMockResolves.SetObjectTagsAsync(TestValues.Name, TestValues.Key, TestValues.FileTags);
         return expect(actual).resolves.toEqual(mockerResolves.PutObjectOutput);
     });
 });
