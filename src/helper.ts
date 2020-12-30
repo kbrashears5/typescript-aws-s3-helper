@@ -19,7 +19,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
      * Create new instance of S3Helper
      * @param logger {ILogger} Logger
      * @param repository {S3.S3} A new repository will be created if not supplied
-     * @param options {S3.ClientConfiguration} Only needed if a repository is supplied
+     * @param options {S3.S3ClientConfig} Only needed if a repository is supplied
      */
     constructor(logger: ILogger,
         repository?: S3.S3,
