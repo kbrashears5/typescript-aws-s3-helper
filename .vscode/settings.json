@@ -3,6 +3,7 @@
         "cobertura",
         "ilogger",
         "postpublish",
-        "prebuild"
+        "prebuild",
+        "presigner"
     ]
 }

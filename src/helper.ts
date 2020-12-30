@@ -1,8 +1,8 @@
 import * as S3 from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ILogger } from 'typescript-ilogger';
 import { BaseClass } from 'typescript-helper-functions';
 import { IS3Helper } from './interface';
-import { SignedUrlType } from './signed-url-type';
 import { Readable } from 'stream';
 import { Metadata } from './any'
 
@@ -13,7 +13,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
     /**
      * AWS Repository for S3
      */
-    public Repository: S3.S3;
+    private Repository: S3.S3;
 
     /**
      * Create new instance of S3Helper
@@ -280,40 +280,53 @@ export class S3Helper extends BaseClass implements IS3Helper {
         return response.TagSet ?? [] as S3.Tag[];
     }
 
-    public async GetSignedUrl(bucket: string,
+    public async GetSignedUrlDownload(bucket: string,
         key: string,
-        type: SignedUrlType,
-        timeoutInMinutes: number = 5,
-        acl?: S3.ObjectCannedACL): Promise<string> {
+        timeoutInMinutes: number = 5): Promise<string> {
 
-        const action = `${S3Helper.name}.${this.GetSignedUrl.name}`;
-        this.LogHelper.LogInputs(action, { bucket, key, type, acl, timeoutInMinutes });
+        const action = `${S3Helper.name}.${this.GetSignedUrlDownload.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, timeoutInMinutes });
 
         // guard clauses
         if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
         if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
 
-        // determine upload or download url
-        let operation = '';
-        switch (type) {
-            case SignedUrlType.Download:
-                operation = 'getObject'
-                break;
-            case SignedUrlType.Upload:
-                operation = 'putObject'
-            default:
-                break;
-        }
+        const params = {
+            Bucket: bucket,
+            Key: key,
+        } as S3.GetObjectCommandInput;
+        this.LogHelper.LogRequest(action, params);
+
+        const operation = new S3.GetObjectCommand(params);
+
+        const response = await getSignedUrl(this.Repository, operation, { expiresIn: timeoutInMinutes * 60 });
+        this.LogHelper.LogResponse(action, { response });
+
+        return response;
+    }
+
+    public async GetSignedUrlUpload(bucket: string,
+        key: string,
+        timeoutInMinutes: number = 5,
+        acl?: S3.ObjectCannedACL): Promise<string> {
+
+        const action = `${S3Helper.name}.${this.GetSignedUrlUpload.name}`;
+        this.LogHelper.LogInputs(action, { bucket, key, acl, timeoutInMinutes });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(bucket)) { throw new Error(`[${action}]-Must supply bucket`); }
+        if (this.ObjectOperations.IsNullOrWhitespace(key)) { throw new Error(`[${action}]-Must supply key`); }
 
         const params = {
             Bucket: bucket,
             Key: key,
-            Expires: timeoutInMinutes * 60,
             ACL: acl,
-        };
+        } as S3.PutObjectCommandInput;
         this.LogHelper.LogRequest(action, params);
 
-        const response = await this.Repository.getSignedUrl(operation, params);
+        const operation = new S3.PutObjectCommand(params);
+
+        const response = await getSignedUrl(this.Repository, operation, { expiresIn: timeoutInMinutes * 60 });
         this.LogHelper.LogResponse(action, { response });
 
         return response;

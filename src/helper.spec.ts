@@ -2,7 +2,6 @@ import { S3Helper } from './helper';
 import { Logger, LogLevel } from 'typescript-ilogger';
 import { TestingValues } from './test-values';
 import { S3Mock } from './mock';
-import { SignedUrlType } from './signed-url-type';
 
 const logger = new Logger(LogLevel.Off);
 const mockerResolves = new S3Mock(false);
@@ -272,22 +271,43 @@ describe(`${S3Helper.name}.${s3HelperMockResolves.GetObjectTagsAsync.name}`, () 
 });
 
 /**
- * Test the GetSignedUrl method
+ * Test the GetSignedUrlDownload method
  */
-describe(`${S3Helper.name}.${s3HelperMockResolves.GetSignedUrl.name}`, () => {
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetSignedUrlDownload.name}`, () => {
     // set action for this method
-    const action = `${S3Helper.name}.${s3HelperMockResolves.GetSignedUrl.name}`;
+    const action = `${S3Helper.name}.${s3HelperMockResolves.GetSignedUrlDownload.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
-        const actual = s3HelperMockResolves.GetSignedUrl(TestValues.EmptyString, TestValues.Key, SignedUrlType.Download);
+        const actual = s3HelperMockResolves.GetSignedUrlDownload(TestValues.EmptyString, TestValues.Key);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
     });
     test(`${TestValues.ThrowsOnEmpty} key`, () => {
-        const actual = s3HelperMockResolves.GetSignedUrl(TestValues.Name, TestValues.EmptyString, SignedUrlType.Download);
+        const actual = s3HelperMockResolves.GetSignedUrlDownload(TestValues.Name, TestValues.EmptyString);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
     });
     test(TestValues.ValidTest, () => {
-        const actual = s3HelperMockResolves.GetSignedUrl(TestValues.Name, TestValues.Key, SignedUrlType.Download);
+        const actual = s3HelperMockResolves.GetSignedUrlDownload(TestValues.Name, TestValues.Key);
+        return expect(actual).resolves.toEqual(TestValues.SignedUrl);
+    });
+});
+
+/**
+ * Test the GetSignedUrlUpload method
+ */
+describe(`${S3Helper.name}.${s3HelperMockResolves.GetSignedUrlUpload.name}`, () => {
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMockResolves.GetSignedUrlUpload.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMockResolves.GetSignedUrlUpload(TestValues.EmptyString, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMockResolves.GetSignedUrlUpload(TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = s3HelperMockResolves.GetSignedUrlUpload(TestValues.Name, TestValues.Key);
         return expect(actual).resolves.toEqual(TestValues.SignedUrl);
     });
 });

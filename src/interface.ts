@@ -1,4 +1,3 @@
-import { SignedUrlType } from './signed-url-type';
 import * as S3 from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 import { Metadata } from './any';
@@ -7,11 +6,6 @@ import { Metadata } from './any';
  * S3 Helper interface
  */
 export interface IS3Helper {
-    /**
-     * AWS Repository for S3
-     */
-    Repository: S3.S3;
-
     /**
      * Copy an object from source to target
      * @param sourceBucket {string} Source bucket name
@@ -107,16 +101,24 @@ export interface IS3Helper {
         key: string): Promise<S3.Tag[]>;
 
     /**
-     * Get a signed url to upload to or download from
+     * Get a signed url to download from
      * @param bucket {string} Bucket name
      * @param key {string} Object key
-     * @param type {SignedUrlType} Type of signed url to get
-     * @param acl {S3.ObjectCannedACL} ACL of file if uploading
      * @param timeoutInMinutes {number} Timeout for the signed url
      */
-    GetSignedUrl(bucket: string,
+    GetSignedUrlDownload(bucket: string,
         key: string,
-        type: SignedUrlType,
+        timeoutInMinutes: number): Promise<string>;
+
+    /**
+     * Get a signed url to upload to
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param acl {S3.ObjectCannedACL} ACL of file
+     * @param timeoutInMinutes {number} Timeout for the signed url
+     */
+    GetSignedUrlUpload(bucket: string,
+        key: string,
         timeoutInMinutes: number,
         acl?: S3.ObjectCannedACL): Promise<string>;
 
