@@ -44,3 +44,6 @@ const helper = new S3Helper(logger,
 
 const response = await helper.CreateBucketAsync('name');
 ```
+
+## Notes
+If no options are supplied, will default to `us-east-1` as the region
