@@ -1,14 +1,11 @@
-import { SignedUrlType } from './signed-url-type';
+import * as S3 from '@aws-sdk/client-s3';
+import { Readable } from 'stream';
+import { Metadata } from './any';
 
 /**
  * S3 Helper interface
  */
 export interface IS3Helper {
-    /**
-     * AWS Repository for S3
-     */
-    Repository: AWS.S3;
-
     /**
      * Copy an object from source to target
      * @param sourceBucket {string} Source bucket name
@@ -19,13 +16,13 @@ export interface IS3Helper {
     CopyObjectAsync(sourceBucket: string,
         sourceKey: string,
         destinationBucket: string,
-        destinationKey: string): Promise<AWS.S3.CopyObjectOutput>;
+        destinationKey: string): Promise<S3.CopyObjectOutput>;
 
     /**
      * Create a S3 bucket
      * @param name {string} Bucket name
      */
-    CreateBucketAsync(name: string): Promise<AWS.S3.CreateBucketOutput>;
+    CreateBucketAsync(name: string): Promise<S3.CreateBucketOutput>;
 
     /**
      * Delete a S3 bucket
@@ -39,7 +36,7 @@ export interface IS3Helper {
      * @param key {string} Object key to delete
      */
     DeleteObjectAsync(bucket: string,
-        key: string): Promise<AWS.S3.DeleteObjectOutput>;
+        key: string): Promise<S3.DeleteObjectOutput>;
 
     /**
      * Delete multiple objects
@@ -47,7 +44,7 @@ export interface IS3Helper {
      * @param keys {string[]} Array of object keys to delete
      */
     DeleteObjectsAsync(bucket: string,
-        keys: string[]): Promise<AWS.S3.DeleteObjectsOutput>;
+        keys: string[]): Promise<S3.DeleteObjectsOutput>;
 
     /**
      * Delete all the object tags off of an object
@@ -77,7 +74,7 @@ export interface IS3Helper {
      * @param key {string} File prefix and name
      */
     GetObjectAsync(bucket: string,
-        key: string): Promise<AWS.S3.GetObjectOutput>;
+        key: string): Promise<S3.GetObjectOutput>;
 
     /**
      * Get the contents of an S3 object
@@ -85,7 +82,7 @@ export interface IS3Helper {
      * @param key {string} Object key
      */
     GetObjectContentsAsync(bucket: string,
-        key: string): Promise<Buffer | undefined>;
+        key: string): Promise<Readable | undefined>;
 
     /**
      * Get metadata about an object
@@ -93,7 +90,7 @@ export interface IS3Helper {
      * @param key  {string} Object key
      */
     GetObjectMetadataAsync(bucket: string,
-        key: string): Promise<AWS.S3.Metadata | undefined>;
+        key: string): Promise<Metadata | undefined>;
 
     /**
      * Gets the tags for an object
@@ -101,21 +98,29 @@ export interface IS3Helper {
      * @param key {string} Object key
      */
     GetObjectTagsAsync(bucket: string,
-        key: string): Promise<AWS.S3.TagSet>;
+        key: string): Promise<S3.Tag[]>;
 
     /**
-     * Get a signed url to upload to or download from
+     * Get a signed url to download from
      * @param bucket {string} Bucket name
      * @param key {string} Object key
-     * @param type {SignedUrlType} Type of signed url to get
-     * @param acl {AWS.S3.ObjectCannedACL} ACL of file if uploading
      * @param timeoutInMinutes {number} Timeout for the signed url
      */
-    GetSignedUrl(bucket: string,
+    GetSignedUrlDownload(bucket: string,
         key: string,
-        type: SignedUrlType,
+        timeoutInMinutes: number): Promise<string>;
+
+    /**
+     * Get a signed url to upload to
+     * @param bucket {string} Bucket name
+     * @param key {string} Object key
+     * @param acl {S3.ObjectCannedACL} ACL of file
+     * @param timeoutInMinutes {number} Timeout for the signed url
+     */
+    GetSignedUrlUpload(bucket: string,
+        key: string,
         timeoutInMinutes: number,
-        acl?: AWS.S3.ObjectCannedACL): Promise<string>;
+        acl?: S3.ObjectCannedACL): Promise<string>;
 
     /**
      * Move an object within a bucket or to a different bucket
@@ -137,17 +142,17 @@ export interface IS3Helper {
      */
     MultipartUploadCompleteAsync(bucket: string,
         key: string,
-        uploadId: string): Promise<AWS.S3.CompleteMultipartUploadOutput>;
+        uploadId: string): Promise<S3.CompleteMultipartUploadOutput>;
 
     /**
      * Start the multipart upload
      * @param bucket {string} Bucket name
      * @param key {string} Object key
-     * @param acl {AWS.S3.ObjectCannedACL} ACL Permissions
+     * @param acl {S3.ObjectCannedACL} ACL Permissions
      */
     MultipartUploadStartAsync(bucket: string,
         key: string,
-        acl?: AWS.S3.ObjectCannedACL): Promise<AWS.S3.CreateMultipartUploadOutput>;
+        acl?: S3.ObjectCannedACL): Promise<S3.CreateMultipartUploadOutput>;
 
     /**
      * Upload a part to a S3 multipart object
@@ -161,7 +166,7 @@ export interface IS3Helper {
         key: string,
         uploadId: string,
         uploadPart: number,
-        contents: string): Promise<AWS.S3.UploadPartOutput>;
+        contents: string): Promise<S3.UploadPartOutput>;
 
     /**
      * Upload an object to S3
@@ -173,9 +178,9 @@ export interface IS3Helper {
      */
     PutObjectAsync(bucket: string,
         key: string,
-        contents: string | Buffer,
-        acl?: AWS.S3.ObjectCannedACL,
-        encoding?: string): Promise<AWS.S3.PutObjectOutput>;
+        contents: string | Readable,
+        acl?: S3.ObjectCannedACL,
+        encoding?: string): Promise<S3.PutObjectOutput>;
 
     /**
      * Inserts or updates a tag on an object
@@ -187,15 +192,15 @@ export interface IS3Helper {
     SetObjectTagAsync(bucket: string,
         key: string,
         tagName: string,
-        tagValue: string): Promise<AWS.S3.PutObjectTaggingOutput>;
+        tagValue: string): Promise<S3.PutObjectTaggingOutput>;
 
     /**
      * Sets the tags on an object
      * @param bucket {string} Bucket name
      * @param key {string} Object key
-     * @param tags {AWS.S3.TagSet} Tags
+     * @param tags {S3.TagSet} Tags
      */
     SetObjectTagsAsync(bucket: string,
         key: string,
-        tags: AWS.S3.TagSet): Promise<AWS.S3.PutObjectTaggingOutput>;
+        tags: S3.Tag[]): Promise<S3.PutObjectTaggingOutput>;
 }

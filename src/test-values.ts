@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as S3 from '@aws-sdk/client-s3';
+import { Metadata } from './any';
 
 /**
  * Test values
@@ -29,17 +31,14 @@ export class TestingValues {
     public UploadPart: number = 7;
 
     // objects
-    public Metadata: AWS.S3.Metadata = {
+    public Metadata: Metadata = {
         key1: 'value1',
     };
-    public FileTag: AWS.S3.Tag = {
+    public FileTag: S3.Tag = {
         Key: 'Tag1',
         Value: 'Tag1Value',
     };
-    public FileTags: AWS.S3.Tag[] = [
+    public FileTags: S3.Tag[] = [
         this.FileTag,
     ];
-    public TagSet: AWS.S3.TagSet = [
-        this.FileTag,
-    ]
 }
