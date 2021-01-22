@@ -203,14 +203,20 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
 //  * Test the GetSignedUrlDownload method
 //  */
 // describe(`${S3Helper.name}.${s3HelperMock.GetSignedUrlDownload.name}`, () => {
-//     // TODO
+//     test(TestValues.InvalidTest, () => {
+//         const actual = s3HelperMock.GetSignedUrlDownload(TestValues.Name, TestValues.Key);
+//         return expect(actual).rejects.toThrow(TestValues.AWSError);
+//     });
 // });
 
 // /**
 //  * Test the GetSignedUrlUpload method
 //  */
 // describe(`${S3Helper.name}.${s3HelperMock.GetSignedUrlUpload.name}`, () => {
-//     // TODO
+//     test(TestValues.InvalidTest, () => {
+//         const actual = s3HelperMock.GetSignedUrlUpload(TestValues.Name, TestValues.Key);
+//         return expect(actual).rejects.toThrow(TestValues.AWSError);
+//     });
 // });
 
 /**

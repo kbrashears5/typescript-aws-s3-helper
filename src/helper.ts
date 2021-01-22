@@ -16,6 +16,11 @@ export class S3Helper extends BaseClass implements IS3Helper {
     private Repository: S3.S3;
 
     /**
+     * S3 Client Config
+     */
+    private Options: S3.S3ClientConfig;
+
+    /**
      * Create new instance of S3Helper
      * @param logger {ILogger} Logger
      * @param repository {S3.S3} A new repository will be created if not supplied
@@ -26,8 +31,8 @@ export class S3Helper extends BaseClass implements IS3Helper {
         options?: S3.S3ClientConfig) {
 
         super(logger);
-        options = this.ObjectOperations.IsNullOrEmpty(options) ? { region: 'us-east-1' } as S3.S3ClientConfig : options!;
-        this.Repository = repository || new S3.S3(options);
+        this.Options = this.ObjectOperations.IsNullOrEmpty(options) ? { region: 'us-east-1' } as S3.S3ClientConfig : options!;
+        this.Repository = repository || new S3.S3(this.Options);
     }
 
     public async CopyObjectAsync(sourceBucket: string,
@@ -294,12 +299,14 @@ export class S3Helper extends BaseClass implements IS3Helper {
         const params = {
             Bucket: bucket,
             Key: key,
-        } as S3.GetObjectCommandInput;
+        } as S3.GetObjectRequest;
         this.LogHelper.LogRequest(action, params);
+
+        const client = new S3.S3Client(this.Options);
 
         const operation = new S3.GetObjectCommand(params);
 
-        const response = await getSignedUrl(this.Repository, operation, { expiresIn: timeoutInMinutes * 60 });
+        const response = await getSignedUrl(client, operation, { expiresIn: timeoutInMinutes * 60 });
         this.LogHelper.LogResponse(action, { response });
 
         return response;
@@ -321,12 +328,14 @@ export class S3Helper extends BaseClass implements IS3Helper {
             Bucket: bucket,
             Key: key,
             ACL: acl,
-        } as S3.PutObjectCommandInput;
+        } as S3.PutObjectRequest;
         this.LogHelper.LogRequest(action, params);
+
+        const client = new S3.S3Client(this.Options);
 
         const operation = new S3.PutObjectCommand(params);
 
-        const response = await getSignedUrl(this.Repository, operation, { expiresIn: timeoutInMinutes * 60 });
+        const response = await getSignedUrl(client, operation, { expiresIn: timeoutInMinutes * 60 });
         this.LogHelper.LogResponse(action, { response });
 
         return response;
