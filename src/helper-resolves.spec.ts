@@ -243,7 +243,17 @@ describe(`${S3Helper.name}.${s3HelperMock.GetBucketMetadataAsync.name}`, () => {
  * Test the GetObjectAsJsonAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsJsonAsync.name}`, () => {
-    // TODO
+    // set action for this method
+    const action = `${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+        const actual = s3HelperMock.GetObjectAsJsonAsync(TestValues.EmptyString, TestValues.Key);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+    });
+    test(`${TestValues.ThrowsOnEmpty} key`, () => {
+        const actual = s3HelperMock.GetObjectAsJsonAsync(TestValues.Name, TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+    });
 });
 
 /**
@@ -271,7 +281,21 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`, () => {
  * Test the GetObjectContentsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectContentsAsync.name}`, () => {
-    // TODO
+        // set action for this method
+        const action = `${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`;
+
+        test(`${TestValues.ThrowsOnEmpty} bucket`, () => {
+            const actual = s3HelperMock.GetObjectContentsAsync(TestValues.EmptyString, TestValues.Key);
+            return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} bucket`);
+        });
+        test(`${TestValues.ThrowsOnEmpty} key`, () => {
+            const actual = s3HelperMock.GetObjectContentsAsync(TestValues.Name, TestValues.EmptyString);
+            return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
+        });
+        test(TestValues.ValidTest, () => {
+            const actual = s3HelperMock.GetObjectContentsAsync(TestValues.Name, TestValues.Key);
+            return expect(actual).resolves.toEqual(getObjectOutputResponse.Body);
+        });
 });
 
 /**

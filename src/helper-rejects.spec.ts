@@ -153,7 +153,10 @@ describe(`${S3Helper.name}.${s3HelperMock.GetBucketMetadataAsync.name}`, () => {
  * Test the GetObjectAsJsonAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsJsonAsync.name}`, () => {
-    // TODO
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMock.GetObjectAsJsonAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
 });
 
 /**
@@ -170,7 +173,10 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`, () => {
  * Test the GetObjectContentsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectContentsAsync.name}`, () => {
-    // TODO
+    test(TestValues.InvalidTest, () => {
+        const actual = s3HelperMock.GetObjectContentsAsync(TestValues.Name, TestValues.Key);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
 });
 
 /**
