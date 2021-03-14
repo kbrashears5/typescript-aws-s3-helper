@@ -34,15 +34,17 @@ const response = await helper.CreateBucketAsync('name');
 ### Running in separate account or not in Lambda
 
 ```typescript
+import * as S3 from '@aws-sdk/client-s3';
+
 const logger = new Logger(LogLevel.Trace);
 
-const options: AWS.S3.ClientConfiguration = {
+const options: S3.S3ClientConfig = {
   accessKeyId: '{access_key}',
   secretAccessKey: '{secret_key}',
   region: 'us-east-1',
 };
 
-const repository = new AWS.S3(options);
+const repository = new S3.S3(options);
 
 const helper = new S3Helper(logger, repository);
 
