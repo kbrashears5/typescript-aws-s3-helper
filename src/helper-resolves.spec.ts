@@ -5,7 +5,8 @@ import * as S3 from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 
 const readable: Readable = new Readable();
-const completeMultipartUploadOutputResponse: S3.CompleteMultipartUploadOutput = {};
+const completeMultipartUploadOutputResponse: S3.CompleteMultipartUploadOutput =
+  {};
 const copyObjectOutputResponse: S3.CopyObjectOutput = {};
 const createBucketOutputResponse: S3.CreateBucketOutput = {};
 const createMultipartUploadOutputResponse: S3.CreateMultipartUploadOutput = {};
