@@ -1,6 +1,6 @@
 {
   "name": "typescript-aws-s3-helper",
-  "version": "2.0.1",
+  "version": "2.0.42",
   "description": "Typescript AWS S3 Helper",
   "repository": {
     "type": "git",
