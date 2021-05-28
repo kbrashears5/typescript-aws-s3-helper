@@ -1,6 +1,6 @@
 {
   "name": "typescript-aws-s3-helper",
-  "version": "2.0.42",
+  "version": "2.0.43",
   "description": "Typescript AWS S3 Helper",
   "repository": {
     "type": "git",
@@ -24,8 +24,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "~3.17.0",
     "@aws-sdk/s3-request-presigner": "~3.17.0",
-    "typescript-helper-functions": "~1.0.150",
-    "typescript-ilogger": "~1.0.104"
+    "typescript-helper-functions": "~1.0.151",
+    "typescript-ilogger": "~1.0.106"
   },
   "devDependencies": {
     "@types/aws-lambda": "~8.10.76",
@@ -69,8 +69,8 @@
     "clean": "rimraf ./lib",
     "format": "prettier --write .",
     "lint": "eslint -c .eslintrc.yml \"*/**\"",
-    "postinstall": "node-git-hooks",
     "prebuild": "npm run clean && npm run format && npm run lint",
+    "prep": "npm run update && node-git-hooks",
     "test": "jest --ci --coverage",
     "update:aws-sdk-sign": "npm i @aws-sdk/s3-request-presigner@latest",
     "update:aws-sdk": "npm i @aws-sdk/client-s3@latest",
@@ -96,6 +96,6 @@
     "update:typescript-helper-functions": "npm i typescript-helper-functions@latest",
     "update:typescript-ilogger": "npm i typescript-ilogger@latest",
     "update:typescript": "npm i typescript@latest --save-dev",
-    "update": "run-s update:* && npm run postinstall"
+    "update": "run-s update:*"
   }
 }

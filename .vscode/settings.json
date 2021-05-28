@@ -1,7 +1,10 @@
 {
   "cSpell.words": [
+    "Autobuild",
     "cobertura",
+    "codeql",
     "ilogger",
+    "martinbeentjes",
     "postpublish",
     "prebuild",
     "presigner"
