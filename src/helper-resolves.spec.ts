@@ -1,3 +1,6 @@
+// TODO
+/* eslint-disable jest/no-commented-out-tests */
+/* eslint-disable no-undefined */
 import { S3Helper } from './helper';
 import { Logger, LogLevel } from 'typescript-ilogger';
 import { TestingValues } from './test-values';
@@ -10,7 +13,7 @@ const completeMultipartUploadOutputResponse: S3.CompleteMultipartUploadOutput =
 const copyObjectOutputResponse: S3.CopyObjectOutput = {};
 const createBucketOutputResponse: S3.CreateBucketOutput = {};
 const createMultipartUploadOutputResponse: S3.CreateMultipartUploadOutput = {};
-const deleteBucketOutputResponse: object = {};
+const deleteBucketOutputResponse: any = {};
 const deleteObjectOutputResponse: S3.DeleteObjectOutput = {};
 const deleteObjectsOutputResponse: S3.DeleteObjectsOutput = {};
 const deleteObjectTaggingOutputResponse: S3.DeleteObjectTaggingOutput = {};
@@ -18,7 +21,7 @@ const getObjectOutputResponse: S3.GetObjectOutput = { Body: readable };
 const getObjectTaggingOutputResponse: S3.GetObjectTaggingOutput = {
   TagSet: [{ Key: 'Tag1', Value: 'Tag1Value' } as S3.Tag],
 };
-const headBucketOutputResponse: object = {};
+const headBucketOutputResponse: any = {};
 const headObjectOutputResponse: S3.HeadObjectOutput = {
   Metadata: { key1: 'value1' },
 };
@@ -43,7 +46,7 @@ const createMultipartUpload = jest.fn().mockImplementation(() => {
   );
 });
 const deleteBucket = jest.fn().mockImplementation(() => {
-  return Promise.resolve<{}>(deleteBucketOutputResponse);
+  return Promise.resolve<any>(deleteBucketOutputResponse);
 });
 const deleteObject = jest.fn().mockImplementation(() => {
   return Promise.resolve<S3.DeleteObjectOutput>(deleteObjectOutputResponse);
@@ -65,7 +68,7 @@ const getObjectTagging = jest.fn().mockImplementation(() => {
   );
 });
 const headBucket = jest.fn().mockImplementation(() => {
-  return Promise.resolve<{}>(headBucketOutputResponse);
+  return Promise.resolve<any>(headBucketOutputResponse);
 });
 const headObject = jest.fn().mockImplementation(() => {
   return Promise.resolve<S3.HeadObjectOutput>(headObjectOutputResponse);
@@ -162,7 +165,7 @@ describe(`${S3Helper.name}.${s3HelperMock.CopyObjectAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} destinationKey`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.CopyObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -186,7 +189,7 @@ describe(`${S3Helper.name}.${s3HelperMock.CreateBucketAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} name`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.CreateBucketAsync(TestValues.Name);
     return expect(actual).resolves.toEqual(createBucketOutputResponse);
   });
@@ -205,7 +208,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteBucketAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} name`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.DeleteBucketAsync(TestValues.Name);
     return expect(actual).resolves.toEqual(createBucketOutputResponse);
   });
@@ -236,7 +239,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectTagsAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.DeleteObjectTagsAsync(
       TestValues.Name,
       TestValues.Name,
@@ -270,7 +273,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.DeleteObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -303,7 +306,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectsAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} at least one key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.DeleteObjectsAsync(TestValues.Name, [
       TestValues.Key,
     ]);
@@ -324,7 +327,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetBucketMetadataAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} bucket`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.GetBucketMetadataAsync(TestValues.Name);
     return expect(actual).resolves.toEqual(createBucketOutputResponse);
   });
@@ -382,7 +385,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.GetObjectAsync(TestValues.Name, TestValues.Key);
     return expect(actual).resolves.toEqual(getObjectOutputResponse);
   });
@@ -413,7 +416,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectContentsAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.GetObjectContentsAsync(
       TestValues.Name,
       TestValues.Key,
@@ -447,7 +450,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectMetadataAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.GetObjectMetadataAsync(
       TestValues.Name,
       TestValues.Key,
@@ -481,7 +484,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.GetObjectTagsAsync(
       TestValues.Name,
       TestValues.Key,
@@ -505,7 +508,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
 //         const actual = s3HelperMock.GetSignedUrlDownload(TestValues.Name, TestValues.EmptyString);
 //         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
 //     });
-//     test(TestValues.ValidTest, () => {
+//     test(`${TestValues.ValidTest}`, () => {
 //         const actual = s3HelperMock.GetSignedUrlDownload(TestValues.Name, TestValues.Key);
 //         return expect(actual).resolves.toEqual(TestValues.SignedUrl);
 //     });
@@ -526,7 +529,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
 //         const actual = s3HelperMock.GetSignedUrlUpload(TestValues.Name, TestValues.EmptyString);
 //         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} key`);
 //     });
-//     test(TestValues.ValidTest, () => {
+//     test(`${TestValues.ValidTest}`, () => {
 //         const actual = s3HelperMock.GetSignedUrlUpload(TestValues.Name, TestValues.Key);
 //         return expect(actual).resolves.toEqual(TestValues.SignedUrl);
 //     });
@@ -583,7 +586,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MoveObjectAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} destinationKey`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.MoveObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -631,7 +634,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadCompleteAsync.name}`, (
       `[${action}]-${TestValues.MustSupply} uploadId`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.MultipartUploadCompleteAsync(
       TestValues.Name,
       TestValues.Key,
@@ -668,7 +671,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadStartAsync.name}`, () =
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.MultipartUploadStartAsync(
       TestValues.Name,
       TestValues.Key,
@@ -756,7 +759,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadUploadPartAsync.name}`,
       `[${action}]-Part size must be between 5 MB and 10 GB`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.MultipartUploadUploadPartAsync(
       TestValues.Name,
       TestValues.Key,
@@ -795,7 +798,7 @@ describe(`${S3Helper.name}.${s3HelperMock.PutObjectAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} key`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.PutObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -856,7 +859,7 @@ describe(`${S3Helper.name}.${s3HelperMock.SetObjectTagAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} tagValue`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.SetObjectTagAsync(
       TestValues.Name,
       TestValues.Key,
@@ -904,7 +907,7 @@ describe(`${S3Helper.name}.${s3HelperMock.SetObjectTagsAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} tags`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = s3HelperMock.SetObjectTagsAsync(
       TestValues.Name,
       TestValues.Key,

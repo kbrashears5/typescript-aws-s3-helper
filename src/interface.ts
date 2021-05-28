@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as S3 from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 import { Metadata } from './any';
@@ -30,7 +31,7 @@ export interface IS3Helper {
    * Delete a S3 bucket
    * @param name {string} Bucket name
    */
-  DeleteBucketAsync(name: string): Promise<object>;
+  DeleteBucketAsync(name: string): Promise<any>;
 
   /**
    * Delete an object
@@ -57,13 +58,13 @@ export interface IS3Helper {
    * @param bucket {string} Bucket name
    * @param key {string} Object key
    */
-  DeleteObjectTagsAsync(bucket: string, key: string): Promise<object>;
+  DeleteObjectTagsAsync(bucket: string, key: string): Promise<any>;
 
   /**
    * Get metadata about a bucket
    * @param bucket {string} Bucket
    */
-  GetBucketMetadataAsync(bucket: string): Promise<object>;
+  GetBucketMetadataAsync(bucket: string): Promise<any>;
 
   /**
    * Get a JSON typed object from S3

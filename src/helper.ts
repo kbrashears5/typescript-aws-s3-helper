@@ -1,3 +1,4 @@
+/* eslint-disable no-undefined */
 import * as S3 from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ILogger } from 'typescript-ilogger';
@@ -34,7 +35,8 @@ export class S3Helper extends BaseClass implements IS3Helper {
     super(logger);
     this.Options = this.ObjectOperations.IsNullOrEmpty(options)
       ? ({ region: 'us-east-1' } as S3.S3ClientConfig)
-      : options!;
+      : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        options!;
     this.Repository = repository || new S3.S3(this.Options);
   }
 
@@ -103,7 +105,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
     return response;
   }
 
-  public async DeleteBucketAsync(name: string): Promise<object> {
+  public async DeleteBucketAsync(name: string): Promise<any> {
     const action = `${S3Helper.name}.${this.DeleteBucketAsync.name}`;
     this.LogHelper.LogInputs(action, { name });
 
@@ -192,7 +194,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
   public async DeleteObjectTagsAsync(
     bucket: string,
     key: string,
-  ): Promise<object> {
+  ): Promise<any> {
     const action = `${S3Helper.name}.${this.DeleteObjectTagsAsync.name}`;
     this.LogHelper.LogInputs(action, { bucket, key });
 
@@ -215,7 +217,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
     return response;
   }
 
-  public async GetBucketMetadataAsync(bucket: string): Promise<object> {
+  public async GetBucketMetadataAsync(bucket: string): Promise<any> {
     const action = `${S3Helper.name}.${this.GetBucketMetadataAsync.name}`;
     this.LogHelper.LogInputs(action, { bucket });
 
@@ -343,7 +345,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
   public async GetSignedUrlDownload(
     bucket: string,
     key: string,
-    timeoutInMinutes: number = 5,
+    timeoutInMinutes = 5,
   ): Promise<string> {
     const action = `${S3Helper.name}.${this.GetSignedUrlDownload.name}`;
     this.LogHelper.LogInputs(action, { bucket, key, timeoutInMinutes });
@@ -377,7 +379,7 @@ export class S3Helper extends BaseClass implements IS3Helper {
   public async GetSignedUrlUpload(
     bucket: string,
     key: string,
-    timeoutInMinutes: number = 5,
+    timeoutInMinutes = 5,
     acl?: S3.ObjectCannedACL,
   ): Promise<string> {
     const action = `${S3Helper.name}.${this.GetSignedUrlUpload.name}`;
@@ -564,9 +566,11 @@ export class S3Helper extends BaseClass implements IS3Helper {
 
     // set defaults
     if (this.ObjectOperations.IsNullOrWhitespace(acl)) {
+      // eslint-disable-next-line no-param-reassign
       acl = 'bucket-owner-full-control';
     }
     if (this.ObjectOperations.IsNullOrWhitespace(encoding)) {
+      // eslint-disable-next-line no-param-reassign
       encoding = 'utf-8';
     }
 

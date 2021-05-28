@@ -8,31 +8,31 @@ import { Metadata } from './any';
  */
 export class TestingValues {
   // descriptions
-  public AWSError: string = 'AWS Error';
-  public CannotBeZero: string = 'Cannot be zero';
-  public InvalidTest: string = 'returns error from AWS';
-  public MustSupply: string = 'Must supply';
-  public ThrowsOnEmpty: string = 'throws on empty';
-  public ValidTest: string = 'returns valid response from AWS';
+  public AWSError = 'AWS Error';
+  public CannotBeZero = 'Cannot be zero';
+  public InvalidTest = 'returns error from AWS';
+  public MustSupply = 'Must supply';
+  public ThrowsOnEmpty = 'throws on empty';
+  public ValidTest = 'returns valid response from AWS';
 
   // empty values
   public EmptyArray = [];
-  public EmptyString: string = '';
+  public EmptyString = '';
 
   // strings
-  public Body: string = 'body';
-  public Key: string = 'key';
-  public Name: string = 'name';
+  public Body = 'body';
+  public Key = 'key';
+  public Name = 'name';
   public SignedUrl =
     'https://bucket.s3.amazonaws.com/file.ext?AWSAccessKeyId=AccessKeyId&Content-Type=ContentType&Expires=123456789&Signature=Signature';
-  public UploadId: string = 'upload-id';
+  public UploadId = 'upload-id';
   public UploadPart5Mb: string = fs.readFileSync(
     path.resolve(__dirname, 'multipart-upload-file.txt'),
     'utf8',
   );
 
   // numbers
-  public UploadPart: number = 7;
+  public UploadPart = 7;
 
   // objects
   public Metadata: Metadata = {
@@ -42,5 +42,6 @@ export class TestingValues {
     Key: 'Tag1',
     Value: 'Tag1Value',
   };
+  // eslint-disable-next-line no-invalid-this
   public FileTags: S3.Tag[] = [this.FileTag];
 }

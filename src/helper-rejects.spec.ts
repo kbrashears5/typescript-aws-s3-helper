@@ -1,3 +1,5 @@
+// TODO
+/* eslint-disable jest/no-commented-out-tests */
 import { S3Helper } from './helper';
 import { Logger, LogLevel } from 'typescript-ilogger';
 import { TestingValues } from './test-values';
@@ -83,7 +85,7 @@ const TestValues = new TestingValues();
  * Test the CopyObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.CopyObjectAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.CopyObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -98,7 +100,7 @@ describe(`${S3Helper.name}.${s3HelperMock.CopyObjectAsync.name}`, () => {
  * Test the CreateBucketAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.CreateBucketAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.CreateBucketAsync(TestValues.Name);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -108,7 +110,7 @@ describe(`${S3Helper.name}.${s3HelperMock.CreateBucketAsync.name}`, () => {
  * Test the DeleteBucketAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.DeleteBucketAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.DeleteBucketAsync(TestValues.Name);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -118,7 +120,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteBucketAsync.name}`, () => {
  * Test the DeleteObjectTagsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectTagsAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.DeleteObjectTagsAsync(
       TestValues.Name,
       TestValues.Name,
@@ -131,7 +133,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectTagsAsync.name}`, () => {
  * Test the DeleteObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.DeleteObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -144,7 +146,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectAsync.name}`, () => {
  * Test the DeleteObjectsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectsAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.DeleteObjectsAsync(TestValues.Name, [
       TestValues.Key,
     ]);
@@ -156,7 +158,7 @@ describe(`${S3Helper.name}.${s3HelperMock.DeleteObjectsAsync.name}`, () => {
  * Test the GetBucketMetadataAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetBucketMetadataAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.GetBucketMetadataAsync(TestValues.Name);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -166,7 +168,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetBucketMetadataAsync.name}`, () => {
  * Test the GetObjectAsJsonAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsJsonAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.GetObjectAsJsonAsync(
       TestValues.Name,
       TestValues.Key,
@@ -179,7 +181,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsJsonAsync.name}`, () => {
  * Test the GetObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.GetObjectAsync(TestValues.Name, TestValues.Key);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -189,7 +191,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectAsync.name}`, () => {
  * Test the GetObjectContentsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectContentsAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.GetObjectContentsAsync(
       TestValues.Name,
       TestValues.Key,
@@ -202,7 +204,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectContentsAsync.name}`, () => {
  * Test the GetObjectMetadataAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectMetadataAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.GetObjectMetadataAsync(
       TestValues.Name,
       TestValues.Key,
@@ -215,7 +217,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectMetadataAsync.name}`, () => {
  * Test the GetObjectTagsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.GetObjectTagsAsync(
       TestValues.Name,
       TestValues.Key,
@@ -228,7 +230,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
 //  * Test the GetSignedUrlDownload method
 //  */
 // describe(`${S3Helper.name}.${s3HelperMock.GetSignedUrlDownload.name}`, () => {
-//     test(TestValues.InvalidTest, () => {
+//     test(`${TestValues.InvalidTest}`, () => {
 //         const actual = s3HelperMock.GetSignedUrlDownload(TestValues.Name, TestValues.Key);
 //         return expect(actual).rejects.toThrow(TestValues.AWSError);
 //     });
@@ -238,7 +240,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
 //  * Test the GetSignedUrlUpload method
 //  */
 // describe(`${S3Helper.name}.${s3HelperMock.GetSignedUrlUpload.name}`, () => {
-//     test(TestValues.InvalidTest, () => {
+//     test(`${TestValues.InvalidTest}`, () => {
 //         const actual = s3HelperMock.GetSignedUrlUpload(TestValues.Name, TestValues.Key);
 //         return expect(actual).rejects.toThrow(TestValues.AWSError);
 //     });
@@ -248,7 +250,7 @@ describe(`${S3Helper.name}.${s3HelperMock.GetObjectTagsAsync.name}`, () => {
  * Test the MoveObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.MoveObjectAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.MoveObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -263,7 +265,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MoveObjectAsync.name}`, () => {
  * Test the MultipartUploadCompleteAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadCompleteAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.MultipartUploadCompleteAsync(
       TestValues.Name,
       TestValues.Key,
@@ -277,7 +279,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadCompleteAsync.name}`, (
  * Test the MultipartUploadStartAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadStartAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.MultipartUploadStartAsync(
       TestValues.Name,
       TestValues.Key,
@@ -290,7 +292,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadStartAsync.name}`, () =
  * Test the MultipartUploadUploadPartAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadUploadPartAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.MultipartUploadUploadPartAsync(
       TestValues.Name,
       TestValues.Key,
@@ -306,7 +308,7 @@ describe(`${S3Helper.name}.${s3HelperMock.MultipartUploadUploadPartAsync.name}`,
  * Test the PutObjectAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.PutObjectAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.PutObjectAsync(
       TestValues.Name,
       TestValues.Key,
@@ -320,7 +322,7 @@ describe(`${S3Helper.name}.${s3HelperMock.PutObjectAsync.name}`, () => {
  * Test the SetObjectTagAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.SetObjectTagAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.SetObjectTagAsync(
       TestValues.Name,
       TestValues.Key,
@@ -335,7 +337,7 @@ describe(`${S3Helper.name}.${s3HelperMock.SetObjectTagAsync.name}`, () => {
  * Test the SetObjectTagsAsync method
  */
 describe(`${S3Helper.name}.${s3HelperMock.SetObjectTagsAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = s3HelperMock.SetObjectTagsAsync(
       TestValues.Name,
       TestValues.Key,
