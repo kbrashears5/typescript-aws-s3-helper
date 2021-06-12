@@ -1,6 +1,6 @@
+.githooks
 coverage
 dist
 images
 lib
-multipart-upload-file.txt
 node_modules
