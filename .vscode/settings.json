@@ -1,10 +1,14 @@
 {
   "cSpell.words": [
     "Autobuild",
+    "Parens",
     "cobertura",
+    "codecov",
     "codeql",
+    "eqeqeq",
     "ilogger",
     "martinbeentjes",
+    "paren",
     "postpublish",
     "prebuild",
     "presigner"

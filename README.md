@@ -5,7 +5,7 @@
 <b>Typescript helper functions for AWS S3 service</b>
     
 [![CI/CD](https://github.com/kbrashears5/typescript-aws-s3-helper/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/kbrashears5/typescript-aws-s3-helper/actions/workflows/ci-cd.yml)
-
+[![codecov](https://codecov.io/gh/kbrashears5/typescript-aws-s3-helper/branch/master/graph/badge.svg?token=6VXT4QLN5U)](https://codecov.io/gh/kbrashears5/typescript-aws-s3-helper)
 [![NPM Version](https://img.shields.io/npm/v/typescript-aws-s3-helper)](https://img.shields.io/npm/v/typescript-aws-s3-helper)
 [![Downloads](https://img.shields.io/npm/dt/typescript-aws-s3-helper)](https://img.shields.io/npm/dt/typescript-aws-s3-helper)
 
