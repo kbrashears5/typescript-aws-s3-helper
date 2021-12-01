@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "~3.42.0",
-    "@aws-sdk/s3-request-presigner": "~3.42.0",
+    "@aws-sdk/s3-request-presigner": "~3.43.0",
     "typescript-helper-functions": "~1.0.156",
     "typescript-ilogger": "~1.0.111"
   },
